@@ -27,20 +27,36 @@
              version="2.0">
 
     <persistence-unit name="org.hibernate.tutorial.jpa">
+
         <description>
             Persistence unit for the JPA tutorial of the Hibernate Getting Started Guide
         </description>
 
-        <class>org.hibernate.tutorial.annotations.Event</class>
+        <!--Should fix a weird warning at startup, but does not work :-(-->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>nico.hibernate.model.Event</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE" />
-            <property name="javax.persistence.jdbc.user" value="sa" />
-            <property name="javax.persistence.jdbc.password" value="" />
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hibernatedb" />
+            <property name="javax.persistence.jdbc.user" value="root" />
+            <property name="javax.persistence.jdbc.password" value="admin" />
 
             <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.hbm2ddl.auto" value="create" />
+
+            <!--possible values: create. update, validate, create-drop-->
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+
+            <!--ORIGINAL VALUES-->
+            <!--<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />-->
+            <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1;MVCC=TRUE" />-->
+            <!--<property name="javax.persistence.jdbc.user" value="sa" />-->
+            <!--<property name="javax.persistence.jdbc.password" value="" />-->
+<!---->
+            <!--<property name="hibernate.show_sql" value="true" />-->
+            <!--<property name="hibernate.hbm2ddl.auto" value="create" />-->
         </properties>
 
     </persistence-unit>

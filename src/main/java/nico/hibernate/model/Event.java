@@ -21,7 +21,7 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.tutorial.annotations;
+package nico.hibernate.model;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -37,9 +37,15 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table( name = "EVENTS" )
 public class Event {
+
+    @Id
+    @GeneratedValue(generator = "ID_GENERATOR")
     private Long id;
 
     private String title;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "EVENT_DATE")
     private Date date;
 
 	public Event() {
@@ -52,9 +58,7 @@ public class Event {
 		this.date = date;
 	}
 
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
+
     public Long getId() {
 		return id;
     }
@@ -63,8 +67,7 @@ public class Event {
 		this.id = id;
     }
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "EVENT_DATE")
+
     public Date getDate() {
 		return date;
     }

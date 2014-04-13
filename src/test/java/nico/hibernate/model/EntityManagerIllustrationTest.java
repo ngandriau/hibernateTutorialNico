@@ -21,15 +21,17 @@
  * 51 Franklin Street, Fifth Floor
  * Boston, MA  02110-1301  USA
  */
-package org.hibernate.tutorial.annotations;
+package nico.hibernate.model;
 
-import java.util.Date;
-import java.util.List;
+import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
-import junit.framework.TestCase;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Illustrates basic use of Hibernate as a JPA provider.
@@ -37,6 +39,9 @@ import junit.framework.TestCase;
  * @author Steve Ebersole
  */
 public class EntityManagerIllustrationTest extends TestCase {
+
+    final static Logger LOG = LoggerFactory.getLogger(EntityManagerIllustrationTest.class);
+
 	private EntityManagerFactory entityManagerFactory;
 
 	@Override
@@ -52,20 +57,42 @@ public class EntityManagerIllustrationTest extends TestCase {
 	}
 
 	public void testBasicUsage() {
-		// create a couple of events...
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+        LOG.debug("");
+        LOG.debug("create a couple of events...");
+
+
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		entityManager.persist( new Event( "Our very first event!", new Date() ) );
 		entityManager.persist( new Event( "A follow up event", new Date() ) );
 		entityManager.getTransaction().commit();
 		entityManager.close();
 
-		// now lets pull events from the database and list them
+
+        LOG.debug("");
+        LOG.debug("now let search for one particular event with title containing ,follow, ");
+        entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        List<Event> result = entityManager.createNamedQuery("findEventsWithTitleOrderByDate", Event.class)
+                .setParameter("titleP", "%follow%")
+                .getResultList();
+
+        LOG.debug("  found:{} matching events", result.size());
+        for ( Event event : result ) {
+            LOG.debug("  Event (" + event.getDate() + ") : " + event.getTitle());
+        }
+
+        entityManager.getTransaction().commit();
+        entityManager.close();
+
+
+        LOG.debug("");
+        LOG.debug("now lets pull events from the database and list them");
 		entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
-        List<Event> result = entityManager.createQuery( "from Event", Event.class ).getResultList();
+        result = entityManager.createQuery( "from Event", Event.class ).getResultList();
 		for ( Event event : result ) {
-			System.out.println( "Event (" + event.getDate() + ") : " + event.getTitle() );
+            LOG.debug("  Event (" + event.getDate() + ") : " + event.getTitle());
 		}
         entityManager.getTransaction().commit();
         entityManager.close();

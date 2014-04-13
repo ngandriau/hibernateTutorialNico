@@ -23,6 +23,8 @@ Just import the projet from the build.gradle
 
     ./gradlew test
 
+!!Currently broken, work from IDEA, but not from gradle. Cannot find the Id generator from package-info.java
+
 ## generate code coverage report
 
     ./gradlew cobertura
